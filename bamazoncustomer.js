@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 var Table = require('cli-table');
 var inquirer = require('inquirer');
-var item;
+
 
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
     database: 'bamazon'
 });
 
-
+//table constructor
 var table = new Table({ head: ["", "itemID", "Product Name", "Department Name", "Price", "Stock Quantity"] });
 
 
@@ -17,12 +17,9 @@ var table = new Table({ head: ["", "itemID", "Product Name", "Department Name", 
 
 
 connection.connect();
-
+// creates table from data within products
 drawTable();
-connection.query('UPDATE products SET ? WHERE ?', [{ StockQuanitity: (1) }, { id: what }], function(err, result) {
-        console.log((results[what].StockQuanitity));
-        drawTable();
-    });
+
 
 function drawTable() {
     connection.query('SELECT * FROM products', function(error, results, fields) {
@@ -37,6 +34,8 @@ function drawTable() {
 
 //order();
 // connection.end();
+
+// Queries the user to determine order and amount
 function order() {
     var questions = [{
         type: 'input',
@@ -55,7 +54,7 @@ function order() {
         //console.log(JSON.stringify(answers, null, '  '));
         //console.log(answers.item);
         //return answers;
-
+//if the amount they desire is in stock, give it to them and update the database
         if (results[parseInt(answers.item)].StockQuanitity < parseInt(answers.amount)) {
             console.log("That amount isn't valid. Please try again.");
             order();
@@ -67,7 +66,7 @@ function order() {
 
 
 }
-
+//updates the database and redraws the table
 function buyIt(what, quan) {
     connection.query('UPDATE products SET ? WHERE ?', [{ StockQuanitity: (results[what].StockQuanitity - quan) }, { id: what }], function(err, result) {
         console.log((results[what].StockQuanitity));
@@ -78,63 +77,4 @@ function buyIt(what, quan) {
 
 
 
-// [ RowDataPacket {
-//     itemID: 1,
-//     ProductName: 'bananas',
-//     DepartmentName: 'produce',
-//     Price: 1,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 2,
-//     ProductName: 'oranges',
-//     DepartmentName: 'produce',
-//     Price: 2,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 3,
-//     ProductName: 'paper towels',
-//     DepartmentName: 'GM',
-//     Price: 3,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 4,
-//     ProductName: 'toilet paper',
-//     DepartmentName: 'GM',
-//     Price: 2,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 5,
-//     ProductName: 'chia seeds',
-//     DepartmentName: 'Healthy Living',
-//     Price: 3,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 6,
-//     ProductName: 'coldbrew concentrate',
-//     DepartmentName: 'Healthy Living',
-//     Price: 6,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 7,
-//     ProductName: 'cacao nibs',
-//     DepartmentName: 'Healthy Living',
-//     Price: 4,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 8,
-//     ProductName: 'chorizo',
-//     DepartmentName: 'Market',
-//     Price: 3,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 9,
-//     ProductName: 'contact lens solution',
-//     DepartmentName: 'drugstore',
-//     Price: 6,
-//     StockQuanitity: 100 },
-//   RowDataPacket {
-//     itemID: 10,
-//     ProductName: 'condoms',
-//     DepartmentName: 'drugstore',
-//     Price: 6,
-//     StockQuanitity: 100 } ]
+
